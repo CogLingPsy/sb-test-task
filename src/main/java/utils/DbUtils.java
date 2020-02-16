@@ -26,19 +26,25 @@ public class DbUtils {
     private DbUtils() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:src/main/resources/test-db.s3db");
-            logger.info("Connection to DB established");
+            connection.setAutoCommit(false);
+            logger.debug("Connection to DB established");
         } catch (SQLException e) {
             Fail.fail("Connection to DB failed");
         }
+    }
+
+    static PreparedStatement getPreparedStatement(String statement) throws SQLException {
+        return connection.prepareStatement(statement);
     }
 
     static void executeUpdate(String query) {
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
+            connection.commit();
             logger.info(String.format("%s executed", query));
         } catch (SQLException e) {
-            Fail.fail("SQL statement execution failed");
+            Fail.fail(String.format("SQL statement execution failed on query '%s'", query));
         }
     }
 
@@ -47,24 +53,16 @@ public class DbUtils {
         try {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(query);
+            connection.commit();
             logger.info(String.format("%s executed", query));
             if (result.next()) {
                 resultRow = result.getString(1);
             }
         } catch (SQLException e) {
-            Fail.fail("SQL statement execution failed");
+            Fail.fail(String.format("SQL statement execution failed on query '%s'", query));
         }
         assertThat(resultRow).isNotBlank();
         return resultRow;
-    }
-
-    public void closeConnection() {
-        try {
-            connection.close();
-            logger.info("Connection to DB closed");
-        } catch (SQLException e) {
-            logger.error("An error occured on closing DB connection");
-        }
     }
 
     static List<Person> executeAllPersonsSelect(String query) {
@@ -72,14 +70,24 @@ public class DbUtils {
         try {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(query);
+            connection.commit();
             logger.info(String.format("%s executed", query));
             while (result.next()) {
                 Person user = new Person(result.getLong(1), result.getString(2), result.getInt(3));
                 persons.add(user);
             }
         } catch (SQLException e) {
-            Fail.fail("SQL statement execution failed");
+            Fail.fail(String.format("SQL statement execution failed on query '%s'", query));
         }
         return persons;
+    }
+
+    public void closeConnection() {
+        try {
+            connection.close();
+            logger.debug("Connection to DB closed");
+        } catch (SQLException e) {
+            logger.debug("An error occured while closing DB connection");
+        }
     }
 }

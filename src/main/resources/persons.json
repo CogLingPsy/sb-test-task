@@ -1,52 +1,52 @@
-{
-  "1": {
+[
+  {
     "uid": "121",
     "name": "Alex",
     "age": "18"
   },
-  "2": {
+  {
     "uid": "122",
     "name": "Martin",
     "age": "20"
   },
-  "3": {
+  {
     "uid": "123",
     "name": "Valentine",
     "age": "41"
   },
-  "4": {
+  {
     "uid": "124",
     "name": "Stacy",
     "age": "20"
   },
-  "5": {
+  {
     "uid": "125",
     "name": "Chuck",
     "age": "31"
   },
-  "6": {
+  {
     "uid": "126",
     "name": "Kate",
     "age": "33"
   },
-  "7": {
+  {
     "uid": "127",
     "name": "Phoebe",
     "age": "45"
   },
-  "8": {
+  {
     "uid": "128",
     "name": "Marie",
     "age": "23"
   },
-  "9": {
+  {
     "uid": "129",
     "name": "Andreas",
     "age": "56"
   },
-  "10": {
+  {
     "uid": "130",
     "name": "Helmut",
     "age": "44"
   }
-}
+]
